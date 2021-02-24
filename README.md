@@ -14,3 +14,8 @@ The proteins structures is without hydrogens so we want to add them and addition
 	 
 ## For the ligands structures:  
 1. **Adding hydrogen to ligands using obabel** running addingH_obabel.sh, define your input files directory and output files directory
+2. Rename HETATM to ATOM for all ligands using hetatmtoatom.sh
+3. **Adding numbers to hydrogens** running run_pdb_lig_fix.csh (./run_pdb_lig_fix.csh). This script will run a python script in the parent folder, pay attention to tmp file 
+4. **Replace the residue number to 1.** (first install the pdbtools (pip install pdb-tools), then run the pdb_reres.sh script (./pdb_reres.sh) in the PDB directory)
+
+## Docking:
