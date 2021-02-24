@@ -13,3 +13,4 @@ The proteins structures is without hydrogens so we want to add them and addition
 3. **Running CHARMM.** The input should be the prepared pdb file (without ligands, water molecules and solvent, and with fixed HIS and ILE). The output will be the prepared proteins (with hydrogens and as dimer structure) 
 	 
 ## For the ligands structures:  
+1. **Adding hydrogen to ligands using obabel** running addingH_obabel.sh, define your input files directory and output files directory
