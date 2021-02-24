@@ -5,12 +5,11 @@
 2.	Run python script extract_symmetry.py in the PDB initial coordinates directory. This script will create *dat file that CHARMM will read in step #.
 
 ## For the proteins structures:  
-The proteins structures is without hydrogens so we want to add them with CHARMM program.
 
-1. **Determine the protonation state of HIS and ILE** 
+The proteins structures is without hydrogens so we want to add them and additionaly create a dimer from monomer structures with CHARMM program.
 
-Run bash script step1_fixpdb.sh, this script will run the pdbfix.pl (Perl script) that should be in the same directory. The pdbfix.pl will modify the HIS to the corrects protonation state and change for all ILE (CD1->CD). 
-2. **Creating input files for CHARMM**
-
-Run bash step2_createinput.sh . this script will call the ## script and create inputs file for CHARMM. 
+1. **Determine the protonation state of HIS and ILE** Run bash script step1_fixpdb.sh, this script will run the pdbfix.pl (Perl script) that should be in the same directory. The pdbfix.pl will modify the HIS to the corrects protonation state and change for all ILE (CD1->CD). 
+2. **Creating input files for CHARMM**Run bash step2_createinput.sh . this script will call the ## script and create inputs file for CHARMM. 
+3. **Running CHARMM.** The input should be the prepared pdb file (without ligands, water molecules and solvent, and with fixed HIS and ILE). The output will be the prepared proteins (with hydrogens and as dimer structure) 
 	 
+## For the ligands structures:  
