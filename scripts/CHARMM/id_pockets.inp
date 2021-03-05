@@ -1,0 +1,192 @@
+***********************************************************
+*                Start test.inp
+***********************************************************
+* Reads in rtf and prm files, reads pdbs
+*
+
+bomlev 0
+
+! Read protein topology file
+open read unit 10 card name ~/charmm/workspace/dock/sars-cov-2/@{pdb}_@{dir}/local_top/top_all36_prot.rtf
+read rtf unit 10 card 
+close unit 10
+
+!Read protein parameter file
+open read unit 10 card name ~/charmm/workspace/dock/sars-cov-2/@{pdb}_@{dir}/local_top/par_all36_prot.prm
+read para unit 10 card flex
+close unit 10
+
+bomlev -2
+
+open read card unit 10 name ~/charmm/workspace/dock/sars-cov-2/@{pdb}_@{dir}/local_top/top_all36_cgenff.rtf
+read rtf card unit 10 append
+close unit 10
+
+!read parameters
+open read card unit 10 name ~/charmm/workspace/dock/sars-cov-2/@{pdb}_@{dir}/local_top/par_all36_cgenff.prm
+read param card unit 10 flex append
+close unit 10
+
+bomlev 0
+
+stream ~/charmm/workspace/dock/sars-cov-2/@{pdb}_@{dir}/local_top/ligand_1.str
+
+open unit 1 form read name ~/charmm/workspace/dock/sars-cov-2/@{pdb}_@{dir}/pdb/@{pdb}_1.pdb 
+read sequ pdb unit 1
+generate PEP1 setup first nter last cter
+rewind unit 1
+read coor pdb unit 1
+close unit 1
+
+set NumObject ?nres
+
+open unit 1 form read name ~/charmm/workspace/dock/sars-cov-2/@{pdb}_@{dir}/pdb/@{pdb}_2.pdb
+read sequ pdb unit 1
+generate PEP2 setup first nter last cter
+rewind unit 1
+read coor pdb unit 1 offs @NumObject
+close unit 1
+
+set NumObject ?nres
+
+bomlev -1
+
+open unit 1 form read name ~/charmm/workspace/dock/sars-cov-2/@{pdb}_@{dir}/pdb/ligand_1.pdb
+read sequ pdb unit 1
+generate LIG setup first none last none
+rewind unit 1
+read coor pdb unit 1 offs @NumObject
+close unit 1
+
+bomlev 0
+
+set radius1 5.0
+set radius2 4.0 
+set radius3 3.0
+set radius4 6.0
+
+! In one case ligand binds to second monomer
+if @pdb .eq. 6xbg then
+   set PEP PEP2
+else
+   set PEP PEP1
+endif
+
+define back sele (type N .or. type C .or. type O .or. type CA -
+                 .or. type HN .or. type HA .or. type HA2) show end
+
+! Pocket S1'
+! Side-chain: H41, V42, N119, T25, C145, G143; Backbone: T26, G143
+define s1t sele segi @PEP .and. ((resi 25 .or. resi 41:42 .or. resi 119 .or. resi 143 .or. resi 145) .or. -
+                                  ((resi 26 .or. resi 143) .and. back)) show end
+! Pocket S1
+! Side-chain: F140, N142, S144, C145, H163, H172, E166; Backbone: L141, G143, H164, M165
+define s1 sele segi @PEP .and. ((resi 140 .or. resi 142 .or. resi 144:145 .or. resi 163 .or. resi 166 .or. resi 172) .or. -
+                                 (( resi 141 .or. resi 143 .or. resi 164:165) .and. back)) show end
+! Pocket S2
+! Side-chain: Y54, D187, M49, H41; Backbone: R188
+define s2 sele segi @PEP .and. ((resi 41 .or. resi 49 .or. resi 54 .or. resi 187) .or. ((resi 188) .and. back)) show end
+! Pocket S4
+! Side-chain: M165, L167, P168, A191, Q192; Backbone: E166, R188, T190
+define s4 sele segi @PEP .and. ((resi 165 .or. resi 167:168 .or. resi 191:192) .or. -
+                                 ((resi 166 .or. resi 188 .or. resi 190) .and. back)) show end
+! Interface between monomers
+define i1 sele ((segi PEP1 .around. 5.0) .and. segi PEP2) .or. ((segi PEP2 .around. 5.0) .and. segi PEP1) show end
+! Surface is defined as not in pockets or between monomers (assuming there are no additional binding sites)
+define sI sele ((segi PEP1 .or. segi PEP2) .and. .not. (s1t .or. s1 .or. s2 .or. s4 .or. i1)) end
+
+open unit 10 form name @file append
+
+set 1
+trim 1 to 1   ! Add blank
+set pocket
+bomlev -1
+coor stat sele s1t end
+define match sele .byres. ((point ?xave ?yave ?zave cut @radius1) .and. segi LIG) show end
+if ?nsel .gt. 0 then
+   define match sele .byres. ((segi LIG .around. @radius2) .and. s1t) show end
+   if ?nsel .gt. 0 then
+      coor stat sele s1t end
+      define match sele .byres. ((point ?xave ?yave ?zave cut @radius3) .and. segi LIG) show end
+      if ?nsel .gt. 0 then
+         set pocket0 s1t   ! Deep in pocket
+      else
+         set pocket0 s1t_0 ! Near pocket entrance
+      endif
+      set pocket @pocket@1@pocket0
+   endif
+endif
+coor stat sele s1 end
+define match sele .byres. ((point ?xave ?yave ?zave cut @radius1) .and. segi LIG) show end
+if ?nsel .gt. 0 then
+   define match sele .byres. ((segi LIG .around. @radius2) .and. s1) show end
+   if ?nsel .gt. 0 then
+      coor stat sele s1 end
+      define match sele .byres. ((point ?xave ?yave ?zave cut @radius3) .and. segi LIG) show end
+      if ?nsel .gt. 0 then
+         set pocket0 s1    ! Deep in pocket
+      else
+         set pocket0 s1_0  ! Near pocket entrance
+      endif
+      set pocket @pocket@1@pocket0
+   endif
+endif
+coor stat sele s2 end
+define match sele .byres. ((point ?xave ?yave ?zave cut @radius1) .and. segi LIG) show end
+if ?nsel .gt. 0 then
+   define match sele .byres. ((segi LIG .around. @radius2) .and. s2) show end
+   if ?nsel .gt. 0 then
+      coor stat sele s2 end
+      define match sele .byres. ((point ?xave ?yave ?zave cut @radius3) .and. segi LIG) show end
+      if ?nsel .gt. 0 then
+         set pocket0 s2    ! Deep in pocket
+      else
+         set pocket0 s2_0  ! Near pocket entrance
+      endif
+      set pocket @pocket@1@pocket0
+   endif
+endif
+coor stat sele s4 end
+define match sele .byres. ((point ?xave ?yave ?zave cut @radius1) .and. segi LIG) show end
+if ?nsel .gt. 0 then
+   define match sele .byres. ((segi LIG .around. @radius2) .and. s4) show end
+   if ?nsel .gt. 0 then
+      coor stat sele s4 end
+      define match sele .byres. ((point ?xave ?yave ?zave cut @radius3) .and. segi LIG) show end
+      if ?nsel .gt. 0 then
+         set pocket0 s4    ! Deep in pocket
+      else
+         set pocket0 s4_0  ! Near pocket entrance
+      endif
+      set pocket @pocket@1@pocket0
+   endif
+endif
+if @?pocket0 .eq. 0 then
+   coor stat sele s1t .or. s1 .or. s2 .or. s4 end
+   define match sele .byres. ((point ?xave ?yave ?zave cut @radius4) .and. segi LIG) show end
+   if ?nsel .gt. 0 then
+      set pocket0 pocket_center
+      set pocket @pocket@1@pocket0
+   endif
+endif
+! If already assigned to pocket, then not added to interface list
+if @?pocket0 .eq. 0 then
+   coor stat sele .byres. ((segi LIG .around. @radius2) .and. i1) .and. .not. (back .or. s1t .or. s1 .or. s2 .or. s4) show end
+   if ?nsel .gt. 0 then
+      set pocket0 interface
+      set pocket @pocket@1@pocket0
+   endif
+endif
+! If not in any pocket or at interface, assume surface
+if @?pocket0 .eq. 0 then
+   set pocket0 surface
+   set pocket @pocket@1@pocket0
+endif
+bomlev 0
+
+write title unit 10
+* @pdb @pocket
+
+close unit 10
+
+stop
