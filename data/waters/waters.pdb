@@ -1,0 +1,24 @@
+REMARK  CREATED BY DTM 18/09/2007                                                     
+REMARK  MODIFIED BY DTM 23/07/2009                                                    
+REMARK  EDIT BY SHANI                                                                 
+REMARK   DATE:     3/ 3/21      9:21:55      CREATED BY USER: shani                   
+ATOM   9295  OH2 TIP3    1      13.492  11.061  19.183  1.00  0.00      CWAT
+ATOM   9296  H1  TIP3    1      13.943  10.499  19.813  1.00  0.00      CWAT
+ATOM   9297  H2  TIP3    1      12.610  11.164  19.541  1.00  0.00      CWAT
+ATOM   9298  OH2 TIP3    2      16.048  -5.631  19.744  1.00  0.00      CWAT
+ATOM   9299  H1  TIP3    2      15.896  -5.176  18.916  1.00  0.00      CWAT
+ATOM   9300  H2  TIP3    2      16.922  -5.350  20.015  1.00  0.00      CWAT
+ATOM   9301  OH2 TIP3    3      21.243  -1.768  23.365  1.00  0.00      CWAT
+ATOM   9302  H1  TIP3    3      20.381  -1.732  23.779  1.00  0.00      CWAT
+ATOM   9303  H2  TIP3    3      21.109  -2.293  22.576  1.00  0.00      CWAT
+ATOM   9304  OH2 TIP3    4      16.894  13.453  23.109  1.00  0.00      CWAT
+ATOM   9305  H1  TIP3    4      16.313  13.601  22.363  1.00  0.00      CWAT
+ATOM   9306  H2  TIP3    4      16.982  12.501  23.160  1.00  0.00      CWAT
+ATOM   9307  OH2 TIP3    5       2.794  -9.168  18.451  1.00  0.00      CWAT
+ATOM   9308  H1  TIP3    5       3.293  -9.333  19.251  1.00  0.00      CWAT
+ATOM   9309  H2  TIP3    5       3.129  -8.332  18.127  1.00  0.00      CWAT
+ATOM   9310  OH2 TIP3    6       0.799   1.226  20.725  1.00  0.00      CWAT
+ATOM   9311  H1  TIP3    6       0.453   1.768  21.434  1.00  0.00      CWAT
+ATOM   9312  H2  TIP3    6       0.447   1.621  19.927  1.00  0.00      CWAT
+TER    9313      TIP3     6
+END
