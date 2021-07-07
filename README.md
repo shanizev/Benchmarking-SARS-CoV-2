@@ -11,7 +11,7 @@ Goal: Creating the homodimer containing two protomers, and adding hydrogens to t
 
 4.	 **Determine the protonation state of HIS** Run bash script step1_fixpdb.sh, this script will run the pdbfix.pl (perl script) that should be in the same directory. The pdbfix.pl will modify the HIS to the presumed correct protonation state (and changing ILE (CD1->CD))
 5.	 **Creating input files for CHARMM** Run bash step2_createinput.sh. this script will call the createinput_symmetry.sh script and create input files for all structures for CHARMM. 
- Note: Some structures are homodimers initially. For these dtructures we read both chains directly with CHARMM. 
+ Note: Some structures are homodimers initially. For these structures we read both chains directly with CHARMM. 
 7.	 **Running CHARMM.** The input should be the prepared PDB file for CHARMM (without ligands, water molecules and solvent, and with fixed HIS and ILE). The output will be the prepared proteins (with hydrogens and as a dimer structure) 
 	 
 ## For the ligand structures:  
